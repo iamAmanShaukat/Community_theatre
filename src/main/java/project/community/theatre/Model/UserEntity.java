@@ -7,13 +7,11 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="users")
 @Builder
-@ToString
+@Data
+@Table(name="users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +22,4 @@ public class UserEntity {
 
     @Column(name="mobileNo", nullable = false)
     private String mobileNo;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<TicketEntity> ticketList;
 }
