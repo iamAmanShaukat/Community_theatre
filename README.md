@@ -21,7 +21,7 @@
 2. Movie Entity
 3. Theater Entity
 4. Show Entity
-5. Theates Seat Entity
+5. Theatre Seat Entity
 6. Show Seat Entity
 7. Ticket Entity
 
