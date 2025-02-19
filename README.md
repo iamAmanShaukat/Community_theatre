@@ -20,10 +20,8 @@
 1. User Entity
 2. Movie Entity
 3. Theater Entity
-4. Show Entity
-5. Theatre Seat Entity
-6. Show Seat Entity
-7. Ticket Entity
+4. Theatre Seat Entity
+5. Ticket Entity
 
  
 ## Tech-Stack Used : 
