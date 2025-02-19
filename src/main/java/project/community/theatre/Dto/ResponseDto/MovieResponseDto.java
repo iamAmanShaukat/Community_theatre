@@ -1,18 +1,24 @@
 package project.community.theatre.Dto.ResponseDto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MovieResponseDto {
-    int id;
-    String name;
-    LocalDate releaseDate;
-
-    //Optional
-    List<ShowResponseDto> showDtoList;
+    private String movieId;
+    private String name;
+    private String genre;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String duration;
+    private String description;
+    private String producer;
+    private String director;
 }

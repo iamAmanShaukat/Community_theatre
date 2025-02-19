@@ -1,32 +1,47 @@
 package project.community.theatre.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "movies")
 public class MovieEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @NotNull(message = "ID cannot be null")
+    private String movieId;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "releaseDate", columnDefinition = "DATE", nullable = false)
-    private LocalDate releaseDate;
+    @Column(name = "genre", nullable = false)
+    private String genre;
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<ShowEntity> showsList;
+    @Column(name = "start_date", columnDefinition = "DATE", nullable = false)
+    private LocalDate startDate;
 
+    @Column(name = "end_date", columnDefinition = "DATE", nullable = false)
+    private LocalDate endDate;
+
+    @Column(name = "duration")
+    private String duration;
+
+    @Column(name = "description", length = 1000)
+    private String description;
+
+    @Column(name = "producer")
+    private String producer;
+
+    @Column(name = "director")
+    private String director;
 }

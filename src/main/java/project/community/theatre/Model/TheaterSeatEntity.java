@@ -27,8 +27,4 @@ public class TheaterSeatEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "seatType", nullable = false)
     private SeatType seatType;
-
-    @ManyToOne
-    @JsonIgnore
-    private TheaterEntity theater;
 }
