@@ -11,7 +11,7 @@ public interface EventService {
     EventResponseDto addEvent(EventEntryDto eventEntryDto);
     
     // Get Movie
-    EventResponseDto getEvent(int id);
+    EventResponseDto getEvent(String id);
 
     List<EventResponseDto> getAllEvent();
 

@@ -10,7 +10,7 @@ public class EventMapper {
 
     public static EventEntity mapDtoToEntity(EventEntryDto eventEntryDto) {
         if (eventEntryDto == null) {
-            throw new IllegalArgumentException("MovieEntryDto cannot be null");
+            throw new IllegalArgumentException("EventEntryDto cannot be null");
         }
 
         // Parse startDate and endDate into LocalDate (assuming format "yyyy-MM-dd")
@@ -18,7 +18,7 @@ public class EventMapper {
         LocalDate endDate = LocalDate.parse(eventEntryDto.getEndDate());
 
         return EventEntity.builder()
-                .movieId(eventEntryDto.getMovieId())
+                .eventId(eventEntryDto.getEventId())
                 .name(eventEntryDto.getName())
                 .genre(eventEntryDto.getGenre())
                 .startDate(startDate)
@@ -32,10 +32,10 @@ public class EventMapper {
 
     public static EventResponseDto mapEntityToDto(EventEntity eventEntity) {
         if (eventEntity == null) {
-            throw new IllegalArgumentException("MovieEntity cannot be null");
+            throw new IllegalArgumentException("EventEntity cannot be null");
         }
         return EventResponseDto.builder()
-                .movieId(eventEntity.getMovieId())
+                .eventId(eventEntity.getEventId())
                 .name(eventEntity.getName())
                 .genre(eventEntity.getGenre())
                 .startDate(eventEntity.getStartDate())

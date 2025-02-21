@@ -14,7 +14,7 @@ public class MessageConstants {
     public static final String ERROR_SEAT_NOT_AVAILABLE = "Seat is not available.";
 
     // Logging Messages
-    public static final String LOG_MOVIE_ADDED_SUCCESSFULLY = "Movie added successfully: {}";
+    public static final String LOG_EVENT_ADDED_SUCCESSFULLY = "Event added successfully: {}";
     public static final String LOG_SEATS_LOCKED_SUCCESSFULLY = "Seats locked successfully for show: {}";
     public static final String LOG_SEATS_CHECKED_AVAILABILITY = "Checked seat availability for show: {}";
 

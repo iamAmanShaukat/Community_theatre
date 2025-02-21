@@ -7,20 +7,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import project.community.theatre.dto.requestDto.EventEntryDto;
 import project.community.theatre.dto.responseDto.EventResponseDto;
+import project.community.theatre.exceptionHandler.InvalidImageException;
+import project.community.theatre.exceptionHandler.ResourceNotFoundException;
 import project.community.theatre.mapper.EventMapper;
 import project.community.theatre.model.EventEntity;
 import project.community.theatre.repository.EventRepository;
-import project.community.theatre.service.ImageUploadService;
 import project.community.theatre.service.EventService;
+import project.community.theatre.service.ImageUploadService;
 import project.community.theatre.util.CustomMultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,13 +37,16 @@ public class EventServiceImpl implements EventService {
         log.info("Adding a new event :: {}", eventEntryDto);
         try {
             String imageUrl = processAndStoreImage(eventEntryDto.getImage());
-
             EventEntity eventEntity = EventMapper.mapDtoToEntity(eventEntryDto);
             eventEntity.setImageUrl(imageUrl);
 
             eventRepository.save(eventEntity);
+
             log.info("Event added successfully :: {}", eventEntity);
             return EventMapper.mapEntityToDto(eventEntity);
+        } catch (InvalidImageException e) {
+            log.error("Invalid image: {}", e.getMessage(), e);
+            throw e; // Let GlobalExceptionHandler handle it
         } catch (Exception e) {
             log.error("Error while adding event :: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to add event", e);
@@ -52,35 +54,36 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponseDto getEvent(int id) {
+    public EventResponseDto getEvent(String id) {
         log.info("Fetching movie by ID :: {}", id);
         try {
-            return eventRepository.findById(id)
+            return eventRepository.findEventById(id)
                     .map(EventMapper::mapEntityToDto)
                     .orElseThrow(() -> {
                         log.error("Movie not found with ID :: {}", id);
                         return new RuntimeException("Movie not found with ID: " + id);
                     });
         } catch (Exception e) {
-            log.error("Error while fetching movie by ID :: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to fetch movie", e);
+            log.error("Error while fetching event by ID :: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to fetch event", e);
         }
     }
 
     @Override
     public List<EventResponseDto> getAllEvent() {
-        log.info("Fetching all event");
+        log.info("Fetching all events");
         try {
-            List<EventEntity> movieEntities = eventRepository.findAll();
-            if (movieEntities.isEmpty()) {
+            List<EventEntity> eventEntities = eventRepository.findAll();
+            eventEntities.sort(Comparator.comparing(EventEntity::getStartDate));
+            if (eventEntities.isEmpty()) {
                 log.warn("No event found in the database");
             }
-            return movieEntities.stream()
+            return eventEntities.stream()
                     .map(EventMapper::mapEntityToDto)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            log.error("Error while fetching all event :: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to fetch all event", e);
+            log.error("Error while fetching all events :: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to fetch all events", e);
         }
     }
 
@@ -90,11 +93,11 @@ public class EventServiceImpl implements EventService {
         try {
             // Validate the image
             if (!Objects.requireNonNull(image.getContentType()).startsWith("image/")) {
-                throw new IllegalArgumentException("Only image files are allowed");
+                throw new InvalidImageException("Only image files are allowed");
             }
 
             if (image.getSize() > 5 * 1024 * 1024) { // 5MB limit
-                throw new IllegalArgumentException("File size exceeds the limit of 5MB");
+                throw new InvalidImageException("File size exceeds the limit of 5MB");
             }
 
             // Generate a unique filename for temporary storage
@@ -108,7 +111,7 @@ public class EventServiceImpl implements EventService {
             // Resize and compress the image locally
             Thumbnails.of(image.getInputStream())
                     .size(800, 600)
-                    .outputQuality(0.8)
+                    .outputQuality(1)
                     .toFile(tempFile);
 
             // Convert the processed file back to MultipartFile for ImageUploadService
@@ -120,6 +123,9 @@ public class EventServiceImpl implements EventService {
 
             return imageUrl;
 
+        } catch (InvalidImageException e) {
+            log.error("Invalid image: {}", e.getMessage(), e);
+            throw e;
         } catch (IllegalArgumentException e) {
             log.error("Validation failed: {}", e.getMessage(), e);
             throw e;
@@ -142,6 +148,6 @@ public class EventServiceImpl implements EventService {
         return Optional.ofNullable(originalFilename)
                 .filter(f -> f.contains("."))
                 .map(f -> f.substring(f.lastIndexOf(".") + 1))
-                .orElseThrow(() -> new IllegalArgumentException("Invalid file format"));
+                .orElseThrow(() -> new InvalidImageException("Invalid file format"));
     }
 }
