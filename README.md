@@ -1,13 +1,13 @@
 ## Greenwich Community Theatre
-* It is a movie ticket booking system project
+* It is an event ticket booking system project
 
 
-## What BookMyShow Project can do : 
+## What this Project can do : 
 ### I. For Admins : 
 #### Admins can :-
-  * Add a Movie.
+  * Add an Event.
   * Add Theater Seats
-  * Create a Show for any Movie in the theater 
+  * Create a Show for any event in the theater 
   * Create Show Seats for booking purpose
 ### II. For Users :
  #### Users can :-
@@ -18,7 +18,7 @@
 
 ## Different Models / Entities / (Table in MySQL) In the Project
 1. User Entity
-2. Movie Entity
+2. Event Entity
 3. Theater Entity
 4. Theatre Seat Entity
 5. Ticket Entity

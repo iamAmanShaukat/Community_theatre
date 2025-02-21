@@ -14,12 +14,12 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "movies1")
+@Table(name = "events")
 public class EventEntity {
 
     @Id
     @NotNull(message = "ID cannot be null")
-    private String movieId;
+    private String eventId;
 
     @Column(name = "name", nullable = false)
     private String name;

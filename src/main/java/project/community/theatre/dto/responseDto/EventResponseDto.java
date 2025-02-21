@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventResponseDto {
-    private String movieId;
+    private String eventId;
     private String name;
     private String genre;
     private LocalDate startDate;

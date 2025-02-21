@@ -15,38 +15,40 @@ import project.community.theatre.service.EventService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/movie")
+@RequestMapping("/event")
+@CrossOrigin("*")
 @Slf4j
 public class EventController {
 
     @Autowired
     private EventService eventService;
 
-    @GetMapping(value = "/get-movie")
-    public ResponseEntity<EventResponseDto> getMovie(@RequestParam("id") int id) {
-        log.info("Received request to fetch movie with ID: {}", id);
+    @GetMapping(value = "/get-event")
+    public ResponseEntity<EventResponseDto> getEvent(@RequestParam("id") String id) {
+        log.info("Received request to fetch event with ID: {}", id);
         EventResponseDto eventResponseDto = eventService.getEvent(id);
-        log.info("Returning movie: {}", eventResponseDto);
+        log.info("Returning event: {}", eventResponseDto);
         return new ResponseEntity<>(eventResponseDto, HttpStatus.OK);
     }
 
 
-    @GetMapping(value = "/get-all-movies")
-    public ResponseEntity<List<EventResponseDto>> getAllMovies() {
-        log.info("Received request to fetch all movies");
-        List<EventResponseDto> movies = eventService.getAllEvent();
-        log.info("Returning {} movies", movies.size());
-        return new ResponseEntity<>(movies, HttpStatus.OK);
+    @GetMapping(value = "/get-all-events")
+    public ResponseEntity<List<EventResponseDto>> getAllEvents() {
+        log.info("Received request to fetch all events");
+        List<EventResponseDto> events = eventService.getAllEvent();
+        log.info("Returning {} events", events.size());
+        return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/add-movie", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<EventResponseDto> addMovie(
-            @Valid @RequestPart("movieDetails") EventEntryDto eventEntryDto,
+
+    @PostMapping(value = "/add-event", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<EventResponseDto> addEvent(
+            @Valid @RequestPart("eventDetails") EventEntryDto eventEntryDto,
             @RequestPart("image") MultipartFile image) {
-        log.info("Received request to add a new movie: {}", eventEntryDto);
+        log.info("Received request to add a new event: {}", eventEntryDto);
         eventEntryDto.setImage(image);
         EventResponseDto eventResponseDto = eventService.addEvent(eventEntryDto);
-        log.info("Movie added successfully: {}", eventResponseDto);
+        log.info("Event added successfully: {}", eventResponseDto);
         return new ResponseEntity<>(eventResponseDto, HttpStatus.CREATED);
     }
 }
