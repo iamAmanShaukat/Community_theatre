@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "movies1")
-public class MovieEntity {
+public class EventEntity {
 
     @Id
     @NotNull(message = "ID cannot be null")
