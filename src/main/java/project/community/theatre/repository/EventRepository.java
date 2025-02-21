@@ -4,14 +4,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import project.community.theatre.model.MovieEntity;
+import project.community.theatre.model.EventEntity;
 
 @Repository
-public interface MovieRepository extends JpaRepository<MovieEntity, Integer> {
+public interface EventRepository extends JpaRepository<EventEntity, Integer> {
 
     // Find movies by title
-    List<MovieEntity> findByName(String name);
+    List<EventEntity> findByName(String name);
 
     // Find movies by genre
-    List<MovieEntity> findByGenre(String genre);
+    List<EventEntity> findByGenre(String genre);
 }

@@ -5,7 +5,7 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class MovieEntryDto {
+public class EventEntryDto {
     @NotNull(message = "ID cannot be null")
     private String movieId;
     private String name;
