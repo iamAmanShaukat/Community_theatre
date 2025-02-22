@@ -1,4 +1,4 @@
-package project.community.theatre.dto;
+package project.community.theatre.dto.requestDto;
 
 import lombok.Data;
 

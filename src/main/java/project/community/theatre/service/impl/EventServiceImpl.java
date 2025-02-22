@@ -3,8 +3,8 @@ package project.community.theatre.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.community.theatre.dto.AddShowTimesRequestDto;
-import project.community.theatre.dto.DeleteShowTimeRequestDto;
+import project.community.theatre.dto.requestDto.AddShowTimesRequestDto;
+import project.community.theatre.dto.requestDto.DeleteShowTimeRequestDto;
 import project.community.theatre.dto.requestDto.EventEntryDto;
 import project.community.theatre.dto.responseDto.EventResponseDto;
 import project.community.theatre.exceptionHandler.InvalidImageException;
@@ -15,6 +15,7 @@ import project.community.theatre.model.ShowTimeEntity;
 import project.community.theatre.model.TicketEntity;
 import project.community.theatre.repository.EventRepository;
 import project.community.theatre.repository.ShowTimeRepository;
+import project.community.theatre.dto.ShowTimeResponseDto;
 import project.community.theatre.repository.TicketRepository;
 import project.community.theatre.service.EventService;
 import project.community.theatre.service.ImageService;
@@ -140,7 +141,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<String> getShowTimesForEvent(String eventId) {
+    public List<ShowTimeResponseDto> getShowTimesForEvent(String eventId) {
         log.info("Fetching show times for event ID: {}", eventId);
 
         // Fetch the event by ID
@@ -149,7 +150,10 @@ public class EventServiceImpl implements EventService {
 
         // Extract the show times from the event's showTimes field
         return eventEntity.getShowTimes().stream()
-                .map(ShowTimeEntity::getShowTime) // Extract the 'showTime' string from each ShowTimeEntity
+                .map(showTimeEntity -> ShowTimeResponseDto.builder()
+                        .id(showTimeEntity.getId()) // Extract the primary key
+                        .showTime(showTimeEntity.getShowTime()) // Extract the showtime
+                        .build())
                 .toList();
     }
 
