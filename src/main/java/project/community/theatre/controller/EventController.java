@@ -8,8 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import project.community.theatre.dto.AddShowTimesRequestDto;
-import project.community.theatre.dto.DeleteShowTimeRequestDto;
+import project.community.theatre.dto.ShowTimeResponseDto;
+import project.community.theatre.dto.requestDto.AddShowTimesRequestDto;
+import project.community.theatre.dto.requestDto.DeleteShowTimeRequestDto;
 import project.community.theatre.dto.requestDto.EventEntryDto;
 import project.community.theatre.dto.responseDto.EventResponseDto;
 import project.community.theatre.service.EventService;
@@ -79,11 +80,13 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}/get-show-times")
-    public ResponseEntity<List<String>> getShowTimesForEvent(@PathVariable String eventId) {
+    public ResponseEntity<List<ShowTimeResponseDto>> getShowTimesForEvent(@PathVariable String eventId) {
         log.info("Received request to fetch show times for event ID: {}", eventId);
 
-        List<String> showTimes = eventService.getShowTimesForEvent(eventId);
+        // Fetch the show times from the service layer
+        List<ShowTimeResponseDto> showTimes = eventService.getShowTimesForEvent(eventId);
 
+        // Return the list of show times
         return new ResponseEntity<>(showTimes, HttpStatus.OK);
     }
 
