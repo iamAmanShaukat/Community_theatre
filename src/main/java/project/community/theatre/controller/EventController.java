@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import project.community.theatre.dto.AddShowTimesRequestDto;
+import project.community.theatre.dto.DeleteShowTimeRequestDto;
 import project.community.theatre.dto.requestDto.EventEntryDto;
 import project.community.theatre.dto.responseDto.EventResponseDto;
 import project.community.theatre.service.EventService;
@@ -26,7 +28,9 @@ public class EventController {
     @GetMapping(value = "/get-event")
     public ResponseEntity<EventResponseDto> getEvent(@RequestParam("id") String id) {
         log.info("Received request to fetch event with ID: {}", id);
+
         EventResponseDto eventResponseDto = eventService.getEvent(id);
+
         log.info("Returning event: {}", eventResponseDto);
         return new ResponseEntity<>(eventResponseDto, HttpStatus.OK);
     }
@@ -35,7 +39,9 @@ public class EventController {
     @GetMapping(value = "/get-all-events")
     public ResponseEntity<List<EventResponseDto>> getAllEvents() {
         log.info("Received request to fetch all events");
+
         List<EventResponseDto> events = eventService.getAllEvent();
+
         log.info("Returning {} events", events.size());
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
@@ -47,8 +53,46 @@ public class EventController {
             @RequestPart("image") MultipartFile image) {
         log.info("Received request to add a new event: {}", eventEntryDto);
         eventEntryDto.setImage(image);
+
         EventResponseDto eventResponseDto = eventService.addEvent(eventEntryDto);
+
         log.info("Event added successfully: {}", eventResponseDto);
         return new ResponseEntity<>(eventResponseDto, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable String eventId) {
+        log.info("Received request to delete event with ID: {}", eventId);
+
+        eventService.deleteEvent(eventId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/add-show-times")
+    public ResponseEntity<Void> addShowTimes(@RequestBody AddShowTimesRequestDto request) {
+        log.info("Received request to add show times for event ID: {}", request.getEventId());
+
+        eventService.addShowTimes(request);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{eventId}/get-show-times")
+    public ResponseEntity<List<String>> getShowTimesForEvent(@PathVariable String eventId) {
+        log.info("Received request to fetch show times for event ID: {}", eventId);
+
+        List<String> showTimes = eventService.getShowTimesForEvent(eventId);
+
+        return new ResponseEntity<>(showTimes, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-show-time")
+    public ResponseEntity<Void> deleteShowTime(@RequestBody DeleteShowTimeRequestDto request) {
+        log.info("Received request to delete show time {} for event ID: {}", request.getShowTime(), request.getEventId());
+
+        eventService.deleteShowTime(request);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

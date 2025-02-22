@@ -1,6 +1,8 @@
 package project.community.theatre.service;
 
 
+import project.community.theatre.dto.AddShowTimesRequestDto;
+import project.community.theatre.dto.DeleteShowTimeRequestDto;
 import project.community.theatre.dto.requestDto.EventEntryDto;
 import project.community.theatre.dto.responseDto.EventResponseDto;
 
@@ -15,4 +17,11 @@ public interface EventService {
 
     List<EventResponseDto> getAllEvent();
 
+    void deleteEvent(String eventId);
+
+    void addShowTimes(AddShowTimesRequestDto request);
+
+    List<String> getShowTimesForEvent(String eventId);
+
+    void deleteShowTime(DeleteShowTimeRequestDto request);
 }

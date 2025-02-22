@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -47,4 +48,8 @@ public class EventEntity {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    // Relationship with ShowTimeEntity
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShowTimeEntity> showTimes;
 }
