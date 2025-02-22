@@ -3,12 +3,19 @@ package project.community.theatre.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.community.theatre.dto.AddShowTimesRequestDto;
+import project.community.theatre.dto.DeleteShowTimeRequestDto;
 import project.community.theatre.dto.requestDto.EventEntryDto;
 import project.community.theatre.dto.responseDto.EventResponseDto;
 import project.community.theatre.exceptionHandler.InvalidImageException;
+import project.community.theatre.exceptionHandler.ResourceNotFoundException;
 import project.community.theatre.mapper.EventMapper;
 import project.community.theatre.model.EventEntity;
+import project.community.theatre.model.ShowTimeEntity;
+import project.community.theatre.model.TicketEntity;
 import project.community.theatre.repository.EventRepository;
+import project.community.theatre.repository.ShowTimeRepository;
+import project.community.theatre.repository.TicketRepository;
 import project.community.theatre.service.EventService;
 import project.community.theatre.service.ImageService;
 
@@ -24,6 +31,12 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private ShowTimeRepository showTimeRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @Override
     public EventResponseDto addEvent(EventEntryDto eventEntryDto) {
@@ -79,4 +92,80 @@ public class EventServiceImpl implements EventService {
             throw new RuntimeException("Failed to fetch all events", e);
         }
     }
+
+    @Override
+    public void deleteEvent(String eventId) {
+        log.info("Deleting event with ID: {}", eventId);
+
+        // Fetch the event
+        EventEntity event = eventRepository.findEventById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + eventId));
+
+        // Delete associated tickets
+        List<TicketEntity> tickets = ticketRepository.findByEventId(eventId);
+        ticketRepository.deleteAll(tickets);
+
+        // Delete associated show times
+        List<ShowTimeEntity> showTimes = showTimeRepository.findByEvent(event);
+        showTimeRepository.deleteAll(showTimes);
+
+        // Delete the event
+        eventRepository.delete(event);
+
+        log.info("Event and all associated data deleted successfully for ID: {}", eventId);
+    }
+
+    @Override
+    public void addShowTimes(AddShowTimesRequestDto request) {
+        log.info("Adding show times for event ID: {}", request.getEventId());
+
+        EventEntity eventEntity = eventRepository.findEventById(request.getEventId())
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + request.getEventId()));
+
+        List<ShowTimeEntity> showTimeEntities = request.getShowTimes().stream()
+                .map(showTime -> ShowTimeEntity.builder()
+                        .event(eventEntity)
+                        .showTime(showTime)
+                        .build())
+                .toList();
+
+        if (eventEntity.getShowTimes() == null) {
+            eventEntity.setShowTimes(showTimeEntities);
+        } else {
+            eventEntity.getShowTimes().addAll(showTimeEntities);
+        }
+
+        eventRepository.save(eventEntity);
+        log.info("Show times added successfully for event ID: {}", request.getEventId());
+    }
+
+    @Override
+    public List<String> getShowTimesForEvent(String eventId) {
+        log.info("Fetching show times for event ID: {}", eventId);
+
+        // Fetch the event by ID
+        EventEntity eventEntity = eventRepository.findEventById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + eventId));
+
+        // Extract the show times from the event's showTimes field
+        return eventEntity.getShowTimes().stream()
+                .map(ShowTimeEntity::getShowTime) // Extract the 'showTime' string from each ShowTimeEntity
+                .toList();
+    }
+
+    @Override
+    public void deleteShowTime(DeleteShowTimeRequestDto request) {
+        log.info("Deleting show time {} for event ID: {}", request.getShowTime(), request.getEventId());
+
+        EventEntity eventEntity = eventRepository.findEventById(request.getEventId())
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + request.getEventId()));
+
+        if (eventEntity.getShowTimes() != null && eventEntity.getShowTimes().remove(request.getShowTime())) {
+            eventRepository.save(eventEntity);
+            log.info("Show time deleted successfully: {}", request.getShowTime());
+        } else {
+            throw new ResourceNotFoundException("Show time not found: " + request.getShowTime());
+        }
+    }
+
 }
