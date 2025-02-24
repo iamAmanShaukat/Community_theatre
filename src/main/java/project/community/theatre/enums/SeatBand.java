@@ -1,6 +1,6 @@
 package project.community.theatre.enums;
 
-public enum SeatType {
+public enum SeatBand {
     A,
     B,
     C
