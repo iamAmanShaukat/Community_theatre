@@ -2,7 +2,7 @@ package project.community.theatre.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import project.community.theatre.enums.SeatType;
+import project.community.theatre.enums.SeatBand;
 
 
 @Entity
@@ -11,7 +11,7 @@ import project.community.theatre.enums.SeatType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name="theaterseats")
+@Table(name="theaterSeats")
 public class TheaterSeatEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,10 @@ public class TheaterSeatEntity {
     @Column(name = "seatNumber", nullable = false)
     private String seatNumber;
 
-    @Column(name = "rate", nullable = false)
-    private int rate;
+    @Column(name = "price", nullable = false)
+    private int price;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "seatType", nullable = false)
-    private SeatType seatType;
+    @Column(name = "seatBand", nullable = false)
+    private SeatBand seatBand;
 }
