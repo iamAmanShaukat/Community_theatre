@@ -7,8 +7,8 @@ import project.community.theatre.model.DiscountEntity;
 import java.util.Optional;
 
 public interface DiscountRepository extends JpaRepository<DiscountEntity, Long> {
-    Optional<DiscountEntity> findByDiscountType(String discountType); // Return Optional
+    Optional<DiscountEntity> findByDiscountType(String discountType);
 
-    boolean existsById(@NotNull Long id);
-    void deleteById(@NotNull Long id);
+    boolean existsById(@NotNull String id);
+    void deleteById(@NotNull String id);
 }
