@@ -8,7 +8,7 @@ import project.community.theatre.dto.responseDto.UserResponseDto;
 @Builder
 public class TicketDto {
     int id;
-    String alotedSeats;
+    String allottedSeats;
     double amount;
     UserResponseDto user;
 }

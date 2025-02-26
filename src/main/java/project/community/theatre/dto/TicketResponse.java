@@ -11,16 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TicketResponse {
-    private Long id; // Ticket ID
-    private String ticketNumber; // Unique ticket number
-    private Double totalPrice; // Total price of the ticket
-    private List<String> seatNumbers; // Comma-separated list of seat numbers
-    private LocalDateTime showTime; // Show time
-    private LocalDateTime bookingTime; // Booking time
-    private String status; // Ticket status (e.g., BOOKED)
+    private String id;
+    private String ticketNumber;
+    private Double totalPrice;
+    private String seatNumbers;
+    private String showTime;
+    private LocalDateTime bookingTime;
+    private String status;
 
     public TicketResponse(String id, String ticketNumber, Double totalPrice, String seatNumbers, LocalDateTime showTime, String name) {
-
-
     }
 }

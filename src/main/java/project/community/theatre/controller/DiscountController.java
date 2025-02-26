@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import project.community.theatre.dto.requestDto.DiscountRequest;
+import project.community.theatre.dto.responseDto.DiscountResponse;
 import project.community.theatre.model.DiscountEntity;
 import project.community.theatre.service.DiscountService;
 
@@ -17,6 +19,12 @@ import java.util.List;
 public class DiscountController {
 
     private final DiscountService discountService;
+
+    @PostMapping("/calculate")
+    public ResponseEntity<DiscountResponse> calculateDiscount(@RequestBody DiscountRequest request) {
+        DiscountResponse response = discountService.calculateDiscount(request);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping(value ="/all-discounts")
     public ResponseEntity<List<DiscountEntity>> getAllDiscounts() {
@@ -40,7 +48,7 @@ public class DiscountController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDiscount(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteDiscount(@PathVariable String id) {
         log.info("Received request to delete discount for id: {}", id);
         discountService.deleteDiscount(id);
         return ResponseEntity.ok().build();

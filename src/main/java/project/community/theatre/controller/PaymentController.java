@@ -36,9 +36,6 @@ public class PaymentController {
         EventEntity event = new EventEntity();
         event.setEventId(paymentRequest.getEventId());
 
-        List<String> seatNumbers = paymentRequest.getSeatNumbers();
-        double totalPrice = paymentRequest.getAmount();
-        LocalDateTime showTime = LocalDateTime.now();
 
         // Generate and save the ticket
         TicketResponse ticketResponse = ticketService.generateAndSaveTicket(paymentRequest, paymentResponse.getTransactionId());
