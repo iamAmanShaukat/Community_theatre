@@ -1,4 +1,4 @@
-package project.community.theatre.exceptionHandler;
+package project.community.theatre.exception;
 
 public class PaymentFailedException extends RuntimeException {
 
