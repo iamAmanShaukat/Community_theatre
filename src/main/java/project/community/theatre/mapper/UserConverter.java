@@ -21,7 +21,7 @@ public class UserConverter {
             throw new IllegalArgumentException("UserEntity cannot be null");
         }
         return UserResponseDto.builder()
-                .id(user.getId())
+                .id(user.getUserId())
                 .name(user.getName())
                 .mobNo(user.getMobileNo()) // Ensure this matches the field name in UserResponseDto
                 .build();
