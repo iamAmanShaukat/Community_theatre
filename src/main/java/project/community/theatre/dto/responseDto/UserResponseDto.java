@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class UserResponseDto {
-    int id;
+    String id;
     String name;
     String mobNo;
 
