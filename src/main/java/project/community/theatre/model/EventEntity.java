@@ -2,10 +2,7 @@ package project.community.theatre.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "showTimes")
 @Table(name = "events")
 public class EventEntity {
 
@@ -52,4 +50,8 @@ public class EventEntity {
     // Relationship with ShowTimeEntity
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShowTimeEntity> showTimes;
+
+    public EventEntity(String eventId) {
+        this.eventId = eventId;
+    }
 }

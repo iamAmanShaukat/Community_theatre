@@ -1,22 +1,21 @@
 package project.community.theatre.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString(exclude = "event")
 @Table(name = "event_show_times")
 public class ShowTimeEntity {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id", nullable = false, unique = true)
+    private String id = UUID.randomUUID().toString(); // Use String for ID
 
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
@@ -24,4 +23,11 @@ public class ShowTimeEntity {
 
     @Column(name = "show_time", nullable = false)
     private String showTime; // Store date-time as a string in Zulu format
+
+    // Constructor to generate ID
+    public ShowTimeEntity(EventEntity event, String showTime) {
+        this.id = UUID.randomUUID().toString(); // Generate a unique ID
+        this.event = event;
+        this.showTime = showTime;
+    }
 }

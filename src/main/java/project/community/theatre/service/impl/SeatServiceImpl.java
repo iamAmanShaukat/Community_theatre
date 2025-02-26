@@ -21,10 +21,9 @@ import java.util.stream.Collectors;
 public class SeatServiceImpl implements SeatService {
 
     @Autowired
-    private StringRedisTemplate redisTemplate;
-    @Autowired
     EventService eventService;
-
+    @Autowired
+    private StringRedisTemplate redisTemplate;
     @Value("${app.seat.lock.expiry}")
     private String tempLockExpiry;
     @Value("${app.redis.temp.seat.lock.key}")
@@ -47,6 +46,7 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public List<String> checkSeatsAvailability(String eventId, String showId, List<String> seatNumbers) {
+        log.info("Checking availability of seats for show ID: {} and seats: {}", showId, seatNumbers);
         return seatNumbers.stream()
                 .filter(seatNumber -> {
                     String key = tempSeatLockKeyFormat
@@ -84,39 +84,52 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public void lockBookedSeats(String eventId, String showId, List<String> bookedSeats) {
-        {
-            log.info("Locking booked seats for show ID {}: {}", showId, bookedSeats);
-            String redisKey = bookedSeatLockKeyFormat
-                    .replace("{eventId}", eventId)
-                    .replace("{showId}", showId);
-            Boolean keyExists = redisTemplate.hasKey(redisKey);
-            if (Boolean.TRUE.equals(keyExists)) {
-                log.info("Appending {} seats to the existing list for show ID {}", bookedSeats.size(), showId);
-                redisTemplate.opsForList().rightPushAll(redisKey, bookedSeats);
-            } else {
-                // Create a new list with the booked seats
-                log.info("Creating a new list with {} seats for show ID {}", bookedSeats.size(), showId);
-                redisTemplate.opsForList().rightPushAll(redisKey, bookedSeats);
-                // Set the TTL for the key (only when creating a new list)
-                redisTemplate.expire(redisKey, getEventExpirationTime(eventId), TimeUnit.SECONDS);
-            }
-            log.info("Successfully locked {} seats for show ID {}", bookedSeats.size(), showId);
+        log.info("Locking booked seats for show ID {}: {}", showId, bookedSeats);
+        String redisKey = bookedSeatLockKeyFormat
+                .replace("{eventId}", eventId)
+                .replace("{showId}", showId);
+        Boolean keyExists = redisTemplate.hasKey(redisKey);
+        if (Boolean.TRUE.equals(keyExists)) {
+            log.info("Appending {} seats to the existing list for show ID {}", bookedSeats.size(), showId);
+            redisTemplate.opsForList().rightPushAll(redisKey, bookedSeats);
+        } else {
+            log.info("Creating a new list with {} seats for show ID {}", bookedSeats.size(), showId);
+            redisTemplate.opsForList().rightPushAll(redisKey, bookedSeats);
+            // Set the TTL for the key (only when creating a new list)
+            redisTemplate.expire(redisKey, getEventExpirationTime(eventId), TimeUnit.SECONDS);
         }
+        log.info("Successfully locked {} seats for show ID {}", bookedSeats.size(), showId);
     }
 
     @Override
     public List<String> getAllBookedSeats(String eventId, String showId) {
-        log.info("Fetching locked seats for event ID: {} and show ID: {}", eventId, showId);
-        String redisKey = bookedSeatLockKeyFormat
+        log.info("Fetching booked and locked seats for event ID: {} and show ID: {}", eventId, showId);
+
+        // Get booked seats from the list stored under the booked key
+        String bookedRedisKey = bookedSeatLockKeyFormat
                 .replace("{eventId}", eventId)
                 .replace("{showId}", showId);
-        List<String> lockedSeats = redisTemplate.opsForList().range(redisKey, 0, -1);
-        if (lockedSeats == null) {
-            log.info("No locked seats found for event ID: {} and show ID: {}", eventId, showId);
-            return Collections.emptyList();
+        List<String> bookedSeats = redisTemplate.opsForList().range(bookedRedisKey, 0, -1);
+        if (bookedSeats == null) {
+            bookedSeats = Collections.emptyList();
+            log.info("No booked seats found for event ID: {} and show ID: {}", eventId, showId);
+        } else {
+            log.info("Found {} booked seats for event ID: {} and show ID: {}", bookedSeats.size(), eventId, showId);
         }
-        log.info("Found {} locked seats for event ID: {} and show ID: {}", lockedSeats.size(), eventId, showId);
-        return lockedSeats;
+
+        Set<String> lockKeys = getSeatLockKeys(eventId, showId);
+        Set<String> lockedSeats = new HashSet<>();
+        for (String key : lockKeys) {
+            String seat = key.substring(key.lastIndexOf(':') + 1);
+            lockedSeats.add(seat);
+        }
+        log.info("Found {} locked seats.", lockedSeats.size());
+
+        Set<String> allLockedSeats = new HashSet<>(bookedSeats);
+        allLockedSeats.addAll(lockedSeats);
+        log.info("Total booked and locked seats: {}", allLockedSeats.size());
+
+        return new ArrayList<>(allLockedSeats);
     }
 
     private long getEventExpirationTime(String eventId) {
@@ -132,5 +145,15 @@ public class SeatServiceImpl implements SeatService {
                 Instant.ofEpochMilli(currentTimeMillis),
                 Instant.ofEpochMilli(endTimeMillis)
         );
+    }
+
+    private Set<String> getSeatLockKeys(String eventId, String showId) {
+        // Construct the pattern with the known eventId and showId
+        String pattern = tempSeatLockKeyFormat
+                .replace("{eventId}", eventId)
+                .replace("{showId}", showId)
+                .replace("{seat}", "*");
+
+        return redisTemplate.keys(pattern);
     }
 }

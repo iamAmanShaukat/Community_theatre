@@ -38,12 +38,12 @@ public class SeatController {
         }
     }
 
-    @GetMapping("/booked-seats/{showId}")
+    @GetMapping("/booked-seats/{eventId}/{showId}")
     public ResponseEntity<List<String>> getAllBookedSeats(@PathVariable String eventId, @PathVariable String showId) {
         log.info("Fetching locked seats for event ID: {} and show ID: {}", eventId, showId);
-
+    
         List<String> lockedSeats = seatService.getAllBookedSeats(eventId, showId);
-
+    
         return ResponseEntity.ok(lockedSeats);
     }
 }

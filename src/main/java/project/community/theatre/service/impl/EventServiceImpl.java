@@ -7,8 +7,8 @@ import project.community.theatre.dto.requestDto.AddShowTimesRequestDto;
 import project.community.theatre.dto.requestDto.DeleteShowTimeRequestDto;
 import project.community.theatre.dto.requestDto.EventEntryDto;
 import project.community.theatre.dto.responseDto.EventResponseDto;
-import project.community.theatre.exceptionHandler.InvalidImageException;
-import project.community.theatre.exceptionHandler.ResourceNotFoundException;
+import project.community.theatre.exception.InvalidImageException;
+import project.community.theatre.exception.ResourceNotFoundException;
 import project.community.theatre.mapper.EventMapper;
 import project.community.theatre.model.EventEntity;
 import project.community.theatre.model.ShowTimeEntity;
@@ -103,7 +103,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + eventId));
 
         // Delete associated tickets
-        List<TicketEntity> tickets = ticketRepository.findByEventId(eventId);
+        List<TicketEntity> tickets = ticketRepository.findEventById(eventId);
         ticketRepository.deleteAll(tickets);
 
         // Delete associated show times
@@ -144,15 +144,14 @@ public class EventServiceImpl implements EventService {
     public List<ShowTimeResponseDto> getShowTimesForEvent(String eventId) {
         log.info("Fetching show times for event ID: {}", eventId);
 
-        // Fetch the event by ID
         EventEntity eventEntity = eventRepository.findEventById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + eventId));
 
         // Extract the show times from the event's showTimes field
         return eventEntity.getShowTimes().stream()
                 .map(showTimeEntity -> ShowTimeResponseDto.builder()
-                        .id(showTimeEntity.getId()) // Extract the primary key
-                        .showTime(showTimeEntity.getShowTime()) // Extract the showtime
+                        .id(showTimeEntity.getId())
+                        .showTime(showTimeEntity.getShowTime())
                         .build())
                 .toList();
     }

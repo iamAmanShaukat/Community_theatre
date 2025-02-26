@@ -83,10 +83,8 @@ public class EventController {
     public ResponseEntity<List<ShowTimeResponseDto>> getShowTimesForEvent(@PathVariable String eventId) {
         log.info("Received request to fetch show times for event ID: {}", eventId);
 
-        // Fetch the show times from the service layer
         List<ShowTimeResponseDto> showTimes = eventService.getShowTimesForEvent(eventId);
 
-        // Return the list of show times
         return new ResponseEntity<>(showTimes, HttpStatus.OK);
     }
 
