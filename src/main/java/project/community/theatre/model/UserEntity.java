@@ -1,15 +1,18 @@
 package project.community.theatre.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class UserEntity {
     @Id
@@ -22,14 +25,11 @@ public class UserEntity {
     @Column(name = "mobileNo", nullable = false)
     private String mobileNo;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
-
-    @Column(name = "address")
-    private String address;
 
     @Column(name = "role", nullable = false)
     private String role;

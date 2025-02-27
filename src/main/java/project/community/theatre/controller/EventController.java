@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import project.community.theatre.dto.ShowTimeResponseDto;
+import project.community.theatre.dto.responseDto.ShowTimeResponseDto;
 import project.community.theatre.dto.requestDto.AddShowTimesRequestDto;
 import project.community.theatre.dto.requestDto.DeleteShowTimeRequestDto;
 import project.community.theatre.dto.requestDto.EventEntryDto;
