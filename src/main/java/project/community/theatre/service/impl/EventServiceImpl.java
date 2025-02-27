@@ -15,7 +15,7 @@ import project.community.theatre.model.ShowTimeEntity;
 import project.community.theatre.model.TicketEntity;
 import project.community.theatre.repository.EventRepository;
 import project.community.theatre.repository.ShowTimeRepository;
-import project.community.theatre.dto.ShowTimeResponseDto;
+import project.community.theatre.dto.responseDto.ShowTimeResponseDto;
 import project.community.theatre.repository.TicketRepository;
 import project.community.theatre.service.EventService;
 import project.community.theatre.service.ImageService;

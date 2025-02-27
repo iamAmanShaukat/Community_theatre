@@ -1,7 +1,7 @@
 package project.community.theatre.service;
 
 
-import project.community.theatre.dto.ShowTimeResponseDto;
+import project.community.theatre.dto.responseDto.ShowTimeResponseDto;
 import project.community.theatre.dto.requestDto.AddShowTimesRequestDto;
 import project.community.theatre.dto.requestDto.DeleteShowTimeRequestDto;
 import project.community.theatre.dto.requestDto.EventEntryDto;

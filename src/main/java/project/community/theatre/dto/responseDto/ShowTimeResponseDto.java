@@ -1,4 +1,4 @@
-package project.community.theatre.dto;
+package project.community.theatre.dto.responseDto;
 
 import lombok.Builder;
 import lombok.Data;
