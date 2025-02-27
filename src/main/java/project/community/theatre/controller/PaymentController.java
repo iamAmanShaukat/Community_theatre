@@ -31,12 +31,6 @@ public class PaymentController {
             return ResponseEntity.badRequest().body(paymentResponse);
         }
 
-        UserEntity user = new UserEntity();
-        user.setUserId(paymentRequest.getUserId());
-        EventEntity event = new EventEntity();
-        event.setEventId(paymentRequest.getEventId());
-
-
         // Generate and save the ticket
         TicketResponse ticketResponse = ticketService.generateAndSaveTicket(paymentRequest, paymentResponse.getTransactionId());
 
