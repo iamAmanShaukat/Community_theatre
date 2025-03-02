@@ -1,6 +1,7 @@
 package project.community.theatre.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.community.theatre.dto.TicketResponse;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -24,6 +26,7 @@ public class PaymentController {
 
     @PostMapping("/process")
     public ResponseEntity<?> processPayment(@RequestBody PaymentRequest paymentRequest) {
+        log.info("Received payment request: {}", paymentRequest);
         // Process the payment
         PaymentResponse paymentResponse = paymentService.processPayment(paymentRequest);
 

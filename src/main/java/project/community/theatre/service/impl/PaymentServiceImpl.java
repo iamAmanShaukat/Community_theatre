@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.community.theatre.dto.requestDto.PaymentRequest;
 import project.community.theatre.dto.responseDto.PaymentResponse;
-import project.community.theatre.model.PaymentEntity;
 import project.community.theatre.service.PaymentGateway;
 import project.community.theatre.service.PaymentService;
 
@@ -32,7 +31,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private boolean isValidPayment(PaymentRequest paymentRequest) {
         // Dummy validation logic
-        if (paymentRequest.getAmount() <= 0 || paymentRequest.getCardNumber().startsWith("4000")) {
+        if (paymentRequest.getPayableAmount() <= 0 || paymentRequest.getPaymentDetails().getCardNumber().startsWith("4000")) {
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
