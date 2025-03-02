@@ -3,14 +3,18 @@ package project.community.theatre.util;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.slf4j.Slf4j;
+import project.community.theatre.dto.requestDto.PaymentRequest;
+import project.community.theatre.model.TicketEntity;
+import project.community.theatre.repository.EventRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @Slf4j
 public class PDFUtil {
-    public static byte[] createPDF(String ticketId, String nameName, byte[] qrCodeBytes) {
-        log.info("Creating PDF for ticket: {}", ticketId);
+    private EventRepository eventRepository;
+    public static byte[] createPDF(byte[] qrCodeBytes, TicketEntity ticket) {
+        log.info("Creating PDF for ticket: {}", ticket.getId());
         try {
             Document document = new Document();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -19,7 +23,7 @@ public class PDFUtil {
 
             // Header
             Font headerFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD, BaseColor.BLUE);
-            Paragraph header = new Paragraph("Grand Community Theatre - Event Ticket", headerFont);
+            Paragraph header = new Paragraph("Greenwich Community Theatre - Event Ticket", headerFont);
             header.setAlignment(Element.ALIGN_CENTER);
             header.setSpacingAfter(20f);
             document.add(header);
@@ -29,16 +33,20 @@ public class PDFUtil {
             Paragraph ticketDetails = new Paragraph();
             ticketDetails.setAlignment(Element.ALIGN_LEFT);
             ticketDetails.add(new Chunk("Ticket ID: ", detailFont));
-            ticketDetails.add(new Chunk(ticketId + "\n", detailFont));
+            ticketDetails.add(new Chunk(ticket.getId() + "\n", detailFont));
             ticketDetails.add(new Chunk("Name: ", detailFont));
-            ticketDetails.add(new Chunk(nameName + "\n", detailFont));
+            ticketDetails.add(new Chunk(ticket.getUser().getName() + "\n", detailFont));
             ticketDetails.add(new Chunk("Event: ", detailFont));
-            ticketDetails.add(new Chunk("Spring Musical Extravaganza\n", detailFont));
-            ticketDetails.add(new Chunk("Date: ", detailFont));
-            ticketDetails.add(new Chunk("March 15, 2025\n", detailFont));
-            ticketDetails.add(new Chunk("Time: ", detailFont));
-            ticketDetails.add(new Chunk("7:00 PM\n", detailFont));
-            ticketDetails.add(new Chunk("Venue: ", detailFont));
+            ticketDetails.add(new Chunk(ticket.getEvent().getName(), detailFont));
+            ticketDetails.add(new Chunk("\nDate: ", detailFont));
+            ticketDetails.add(new Chunk(DateTimeConverter.getHumanReadableDate(ticket.getShowTime()), detailFont));
+            ticketDetails.add(new Chunk("\nTime: ", detailFont));
+            ticketDetails.add(new Chunk(DateTimeConverter.getHumanReadableTime(ticket.getShowTime()), detailFont));
+            ticketDetails.add(new Chunk("\nSeat Numbers: ", detailFont));
+            ticketDetails.add(new Chunk(ticket.getSeatNumbers(), detailFont));
+            ticketDetails.add(new Chunk("\nTotal Price: ", detailFont));
+            ticketDetails.add(new Chunk(ticket.getTotalPrice() + "\n", detailFont));
+            ticketDetails.add(new Chunk("\nVenue: ", detailFont));
             ticketDetails.add(new Chunk("GCT Main Stage", detailFont));
             ticketDetails.setSpacingAfter(20f);
             document.add(ticketDetails);
