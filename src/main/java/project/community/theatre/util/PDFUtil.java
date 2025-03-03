@@ -14,7 +14,7 @@ import java.io.IOException;
 public class PDFUtil {
     private EventRepository eventRepository;
     public static byte[] createPDF(byte[] qrCodeBytes, TicketEntity ticket) {
-        log.info("Creating PDF for ticket: {}", ticket.getId());
+        log.info("Creating PDF for ticket: {}", ticket.getTicketNumber());
         try {
             Document document = new Document();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -33,7 +33,7 @@ public class PDFUtil {
             Paragraph ticketDetails = new Paragraph();
             ticketDetails.setAlignment(Element.ALIGN_LEFT);
             ticketDetails.add(new Chunk("Ticket ID: ", detailFont));
-            ticketDetails.add(new Chunk(ticket.getId() + "\n", detailFont));
+            ticketDetails.add(new Chunk(ticket.getTicketNumber() + "\n", detailFont));
             ticketDetails.add(new Chunk("Name: ", detailFont));
             ticketDetails.add(new Chunk(ticket.getUser().getName() + "\n", detailFont));
             ticketDetails.add(new Chunk("Event: ", detailFont));

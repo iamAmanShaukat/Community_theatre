@@ -53,12 +53,11 @@ public class TicketServiceImpl implements TicketService {
     
         // Create and save the ticket
         TicketEntity ticket = TicketEntity.builder()
-                .id(paymentRequest.getUserId())
+                .ticketNumber(ticketId)
                 .user(userRepository.findUserById(paymentRequest.getUserId())
                         .orElse(new UserEntity(paymentRequest.getUserId())))
                 .event(eventRepository.findEventById(paymentRequest.getEventId())
                         .orElse(new EventEntity(paymentRequest.getEventId())))
-                .ticketNumber(ticketId)
                 .totalPrice(paymentRequest.getPayableAmount())
                 .seatNumbers(seatNumbersString)
                 .showTime(showTime)

@@ -16,7 +16,7 @@ import java.util.UUID;
 public class TicketEntity {
     @Id
     @Column(name = "id", nullable = false, unique = true)
-    private String id = UUID.randomUUID().toString();
+    private String ticketNumber = UUID.randomUUID().toString();
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -26,8 +26,8 @@ public class TicketEntity {
     @JoinColumn(name = "event_id", nullable = false)
     private EventEntity event;
 
-    @Column(name = "ticket_number", nullable = false, unique = true)
-    private String ticketNumber;
+//    @Column(name = "ticket_number", nullable = false, unique = true)
+//    private String ticketNumber;
 
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
@@ -52,10 +52,9 @@ public class TicketEntity {
     // Constructor to generate ID
     public TicketEntity(UserEntity user, EventEntity event, String ticketNumber, Double totalPrice,
                         String seatNumbers, LocalDateTime showTime, TicketStatus status) {
-        this.id = UUID.randomUUID().toString();
+        this.ticketNumber = UUID.randomUUID().toString();
         this.user = user;
         this.event = event;
-        this.ticketNumber = ticketNumber;
         this.totalPrice = totalPrice;
         this.seatNumbers = seatNumbers;
         this.showTime = showTime;
