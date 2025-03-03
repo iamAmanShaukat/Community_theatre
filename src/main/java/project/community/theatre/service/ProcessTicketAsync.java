@@ -1,6 +1,7 @@
 package project.community.theatre.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.community.theatre.dto.requestDto.PaymentRequest;
@@ -30,7 +31,7 @@ public class ProcessTicketAsync {
 
                     byte[] qrTicket = QRCodeUtil.generateTicketQRCode(ticketId, 200, 200);
                     byte[] pdfBytes = PDFUtil.createPDF(qrTicket, ticket);
-                    String email = providedEmail != null ? providedEmail : ticket.getUser().getEmail();
+                    String email = ObjectUtils.isNotEmpty(providedEmail)? providedEmail : ticket.getUser().getEmail();
                     emailService.sendEmailWithPDF(email, ticket.getUser().getName(), pdfBytes);
 
                     log.info("Successfully delivered ticket for ticketId: {}", ticketId);
