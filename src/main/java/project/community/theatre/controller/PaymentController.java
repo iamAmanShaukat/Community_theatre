@@ -4,16 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.community.theatre.dto.TicketResponse;
+import project.community.theatre.dto.responseDto.TicketResponse;
 import project.community.theatre.dto.requestDto.PaymentRequest;
 import project.community.theatre.dto.responseDto.PaymentResponse;
-import project.community.theatre.model.EventEntity;
-import project.community.theatre.model.UserEntity;
 import project.community.theatre.service.PaymentService;
 import project.community.theatre.service.TicketService;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/payments")

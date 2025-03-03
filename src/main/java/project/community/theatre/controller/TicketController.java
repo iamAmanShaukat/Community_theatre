@@ -1,27 +1,31 @@
 package project.community.theatre.controller;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//import project.community.theatre.Dto.BookTicketRequestDto;
-//import project.community.theatre.Dto.TicketDto;
-//import project.community.theatre.Model.TicketEntity;
-//import project.community.theatre.Service.Impl.TicketServiceImpl;
-//
-//@RestController
-//@RequestMapping("/ticket")
-//public class TicketController {
-//    @Autowired
-//    TicketServiceImpl ticketService;
-//
-//    @GetMapping("/get-ticket")
-//    public ResponseEntity<TicketEntity> getTicketById(@RequestParam("id") int id) {
-//        return new ResponseEntity<>(ticketService.getTicket(id), HttpStatus.FOUND);
-//    }
-//
-//    @PutMapping("/ticket-booking")
-//    public ResponseEntity<TicketDto> bookATicket(@RequestBody BookTicketRequestDto bookTicketRequestDto) {
-//        return new ResponseEntity<>(ticketService.bookTicket(bookTicketRequestDto), HttpStatus.CREATED);
-//    }
-//}
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import project.community.theatre.dto.responseDto.TicketResponse;
+import project.community.theatre.exception.ResourceNotFoundException;
+import project.community.theatre.service.TicketService;
+
+@RestController
+@RequestMapping("/api/v1/tickets")
+@RequiredArgsConstructor
+@Slf4j
+public class TicketController {
+
+    private final TicketService ticketService;
+
+    @GetMapping("/{ticketNumber}")
+    public ResponseEntity<TicketResponse> getTicketDetails(@PathVariable String ticketNumber) {
+        log.info("Received request to fetch ticket details for ticket number: {}", ticketNumber);
+
+        try {
+            TicketResponse ticketResponse = ticketService.getTicketDetails(ticketNumber);
+            return ResponseEntity.ok(ticketResponse);
+        } catch (ResourceNotFoundException e) {
+            log.warn(e.getMessage());
+            return ResponseEntity.status(404).body(null); // Return 404 if ticket not found
+        }
+    }
+}

@@ -99,4 +99,10 @@ public class UserServiceImpl implements UserService {
                 Collections.singletonList(user::getRole)
         );
     }
+
+    @Override
+    public List<UserEntity> getAllUsers() {
+        log.info("Fetching all users");
+        return userRepository.findAll();
+    }
 }
