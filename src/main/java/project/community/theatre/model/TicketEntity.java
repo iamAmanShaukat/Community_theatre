@@ -33,10 +33,13 @@ public class TicketEntity {
     private Double totalPrice;
 
     @Column(name = "seat_numbers", nullable = false)
-    private String seatNumbers; // Comma-separated list of seat numbers (e.g., "A1,A2,B1")
+    private String seatNumbers;
 
     @Column(name = "show_time", nullable = false)
     private LocalDateTime showTime;
+
+    @Column(name = "booking_time", nullable = false)
+    private LocalDateTime bookingTime = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

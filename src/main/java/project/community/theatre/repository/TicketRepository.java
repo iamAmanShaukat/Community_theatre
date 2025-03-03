@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
+
+    Optional<TicketEntity> findByTicketNumber(String ticketNumber);
     @Query("SELECT e FROM EventEntity e WHERE e.id = :id")
     List<TicketEntity> findEventById(@Param("id") String id);
 }

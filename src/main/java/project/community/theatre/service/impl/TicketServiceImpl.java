@@ -5,8 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.community.theatre.dto.TicketResponse;
+import project.community.theatre.dto.responseDto.TicketResponse;
 import project.community.theatre.dto.requestDto.PaymentRequest;
+import project.community.theatre.exception.ResourceNotFoundException;
 import project.community.theatre.model.*;
 import project.community.theatre.repository.EventRepository;
 import project.community.theatre.repository.PaymentHistoryRepository;
@@ -15,11 +16,9 @@ import project.community.theatre.repository.UserRepository;
 import project.community.theatre.service.ProcessTicketAsync;
 import project.community.theatre.service.TicketService;
 import project.community.theatre.service.UserService;
-import project.community.theatre.util.EmailService;
-import project.community.theatre.util.PDFUtil;
-import project.community.theatre.util.QRCodeUtil;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Service
@@ -63,6 +62,7 @@ public class TicketServiceImpl implements TicketService {
                 .totalPrice(paymentRequest.getPayableAmount())
                 .seatNumbers(seatNumbersString)
                 .showTime(showTime)
+                .bookingTime(LocalDateTime.now())
                 .status(TicketEntity.TicketStatus.BOOKED)
                 .build();
         log.info("Saving ticket: {}", ticket);
@@ -91,8 +91,27 @@ public class TicketServiceImpl implements TicketService {
                 ticket.getSeatNumbers(),
                 ticket.getShowTime().toString(),
                 ticket.getEvent().getName(),
-                LocalDateTime.now(),
+                ticket.getBookingTime(),
                 ticket.getStatus().name()
         );
+    }
+
+
+    @Override
+    public TicketResponse getTicketDetails(String ticketNumber) {
+        // Fetch the ticket from the database
+        TicketEntity ticket = ticketRepository.findByTicketNumber(ticketNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with ticket number: " + ticketNumber));
+
+        // Map TicketEntity to TicketResponse
+        return TicketResponse.builder()
+                .ticketNumber(ticket.getTicketNumber())
+                .totalPrice(ticket.getTotalPrice())
+                .seatNumbers(ticket.getSeatNumbers())
+                .showTime(ticket.getShowTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                .eventName(ticket.getEvent().getName())
+                .bookingTime(ticket.getBookingTime())
+                .status(ticket.getStatus().toString())
+                .build();
     }
 }
