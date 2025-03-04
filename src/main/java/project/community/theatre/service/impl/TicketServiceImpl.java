@@ -14,6 +14,7 @@ import project.community.theatre.repository.PaymentHistoryRepository;
 import project.community.theatre.repository.TicketRepository;
 import project.community.theatre.repository.UserRepository;
 import project.community.theatre.service.ProcessTicketAsync;
+import project.community.theatre.service.SeatService;
 import project.community.theatre.service.TicketService;
 import project.community.theatre.service.UserService;
 
@@ -31,6 +32,9 @@ public class TicketServiceImpl implements TicketService {
 
     @Autowired
     ProcessTicketAsync processTicketAsync;
+
+    @Autowired
+    SeatService seatService;
 
 
     private final TicketRepository ticketRepository;
@@ -66,10 +70,13 @@ public class TicketServiceImpl implements TicketService {
                 .build();
         log.info("Saving ticket: {}", ticket);
         ticketRepository.save(ticket);
+
+        // Lock booked seats
+        seatService.lockBookedSeats(paymentRequest.getEventId(), paymentRequest.getShowId(), paymentRequest.getSeatNumbers());
     
         // Save payment history
         PaymentHistoryEntity paymentHistory = PaymentHistoryEntity.builder()
-                .id(paymentRequest.getUserId())
+                .id(transactionId)
                 .user(new UserEntity(paymentRequest.getUserId()))
                 .transactionId(transactionId)
                 .amount(paymentRequest.getPayableAmount())
