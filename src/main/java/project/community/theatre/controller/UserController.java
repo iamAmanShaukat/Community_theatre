@@ -36,4 +36,12 @@ public class UserController {
         List<UserEntity> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
+
+    @PutMapping("/{userId}/update")
+    public ResponseEntity<UserEntity> updateUser(@PathVariable String userId, @RequestBody UserEntity updatedUser) {
+    UserEntity updated = userService.updateUser(userId, updatedUser);
+    return ResponseEntity.ok(updated);
+}
+
+
 }
