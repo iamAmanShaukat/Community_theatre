@@ -2,6 +2,7 @@ package project.community.theatre.util;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import project.community.theatre.dto.requestDto.PaymentRequest;
 import project.community.theatre.model.TicketEntity;
@@ -11,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @Slf4j
+@UtilityClass
 public class PDFUtil {
     private EventRepository eventRepository;
     public static byte[] createPDF(byte[] qrCodeBytes, TicketEntity ticket) {
@@ -53,7 +55,7 @@ public class PDFUtil {
 
             // Centered QR Code
             Image qrImage = Image.getInstance(qrCodeBytes);
-            qrImage.scaleToFit(150, 150); // Slightly larger for visibility
+            qrImage.scaleToFit(150, 150);
             qrImage.setAlignment(Image.ALIGN_CENTER);
             qrImage.setSpacingBefore(10f);
             qrImage.setSpacingAfter(20f);
