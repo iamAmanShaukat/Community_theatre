@@ -19,6 +19,9 @@ public interface UserService {
 
     @Transactional
     AuthResponse signup(SignupRequest request);
+    
+    @Transactional
+    UserEntity updateUser(String userId, UserEntity updatedUser);
 
     AuthResponse login(LoginRequest request);
 

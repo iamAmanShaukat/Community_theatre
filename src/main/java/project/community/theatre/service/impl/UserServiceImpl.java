@@ -62,6 +62,34 @@ public class UserServiceImpl implements UserService {
         return new AuthResponse("User registered successfully", user.getUserId(), user.getRole(), token);
     }
 
+    @Transactional
+    @Override
+    public UserEntity updateUser(String userId, UserEntity updatedUser) {
+        return userRepository.findUserById(userId).map(existingUser -> {
+
+            if (updatedUser.getName() != null && !updatedUser.getName().isBlank()) {
+                existingUser.setName(updatedUser.getName());
+            }
+            
+            if (updatedUser.getMobileNo() != null && !updatedUser.getMobileNo().isBlank()) {
+                existingUser.setMobileNo(updatedUser.getMobileNo());
+            }
+
+            if (updatedUser.getEmail() != null && !updatedUser.getEmail().isBlank()) {
+                existingUser.setEmail(updatedUser.getEmail());
+            }
+
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+                existingUser.setPassword(passwordEncoder.encodePassword(updatedUser.getPassword()));
+            }
+
+            existingUser.setRole(updatedUser.getRole());
+
+            log.info("User with ID {} updated successfully", userId);
+            return userRepository.save(existingUser);
+        }).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+    }
+
     @Override
     public AuthResponse login(LoginRequest request) {
         UserEntity user = userRepository.findByEmail(request.getEmail())
