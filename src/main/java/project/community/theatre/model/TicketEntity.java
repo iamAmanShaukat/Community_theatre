@@ -23,11 +23,12 @@ public class TicketEntity {
     private UserEntity user;
 
     @ManyToOne
+    @JoinColumn(name = "show_time_id", nullable = false)
+    private ShowTimeEntity showTimeId;
+
+    @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
     private EventEntity event;
-
-//    @Column(name = "ticket_number", nullable = false, unique = true)
-//    private String ticketNumber;
 
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
