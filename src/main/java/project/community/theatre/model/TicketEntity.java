@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tickets")
-@ToString(exclude = {"user", "event"})
+@ToString(exclude = {"user", "event", "showTimeId"})
 public class TicketEntity {
     @Id
     @Column(name = "id", nullable = false, unique = true)
