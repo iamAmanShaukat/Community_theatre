@@ -1,0 +1,54 @@
+package project.community.theatre.service.impl;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import project.community.theatre.exception.ResourceNotFoundException;
+import project.community.theatre.model.EventEntity;
+import project.community.theatre.model.ReviewEntity;
+import project.community.theatre.repository.EventRepository;
+import project.community.theatre.repository.ReviewRepository;
+import project.community.theatre.service.ReviewService;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class ReviewServiceImpl implements ReviewService {
+
+    private final ReviewRepository reviewRepository;
+    private final EventRepository eventRepository;
+
+    @Transactional
+    public ReviewEntity saveReview(String userName, Integer rating, String description, String eventId) {
+        log.info("Saving review for event ID: {}", eventId);
+
+        // Fetch the event to ensure it exists
+        EventEntity event = eventRepository.findEventById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + eventId));
+
+        // Set default username if empty
+        if (userName == null || userName.trim().isEmpty()) {
+            userName = "Anonymous";
+        }
+
+        // Create and save the review
+        ReviewEntity review = ReviewEntity.builder()
+                .userName(userName)
+                .rating(rating)
+                .description(description)
+                .reviewedDate(LocalDate.now())
+                .event(event)
+                .build();
+
+        return reviewRepository.save(review);
+    }
+
+    public List<ReviewEntity> getAllReviews(String eventId) {
+        log.info("Fetching all reviews for event ID: {}", eventId);
+        return reviewRepository.findByEvent_EventId(eventId);
+    }
+}
