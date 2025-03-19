@@ -13,6 +13,7 @@ import project.community.theatre.service.ReviewService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         // Create and save the review
         ReviewEntity review = ReviewEntity.builder()
+                .reviewId(UUID.randomUUID().toString())
                 .userName(userName)
                 .rating(rating)
                 .description(description)
