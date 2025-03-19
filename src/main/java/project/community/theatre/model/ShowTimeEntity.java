@@ -30,4 +30,8 @@ public class ShowTimeEntity {
         this.event = event;
         this.showTime = showTime;
     }
+
+    public ShowTimeEntity(String showId) {
+        this.id = showId;
+    }
 }

@@ -67,6 +67,7 @@ public class TicketServiceImpl implements TicketService {
                 .showTime(showTime)
                 .bookingTime(LocalDateTime.now())
                 .status(TicketEntity.TicketStatus.BOOKED)
+                .showTimeId(new ShowTimeEntity(paymentRequest.getShowId()))
                 .build();
         log.info("Saving ticket: {}", ticket);
         ticketRepository.save(ticket);
