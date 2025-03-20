@@ -54,4 +54,8 @@ public class EventEntity {
     public EventEntity(String eventId) {
         this.eventId = eventId;
     }
+
+    // Relationship with ReviewEntity
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewEntity> reviewId;
 }
