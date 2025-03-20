@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import project.community.theatre.dto.responseDto.ReviewResponseDto;
 import project.community.theatre.exception.ResourceNotFoundException;
 import project.community.theatre.model.EventEntity;
 import project.community.theatre.model.ReviewEntity;
@@ -49,8 +51,22 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepository.save(review);
     }
 
-    public List<ReviewEntity> getAllReviews(String eventId) {
-        log.info("Fetching all reviews for event ID: {}", eventId);
-        return reviewRepository.findByEvent_EventId(eventId);
+    @Override
+    public List<ReviewResponseDto> getAllReviews(String eventId) {
+        log.info("Fetching reviews for event ID: {}", eventId);
+
+        EventEntity eventEntity = eventRepository.findEventById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found with ID: " + eventId));
+
+        // Extract the show times from the event's showTimes field
+        return eventEntity.getReviewId().stream()
+                .map(ReviewEntity -> ReviewResponseDto.builder()
+                        .reviewId(ReviewEntity.getReviewId())
+                        .userName(ReviewEntity.getUserName())
+                        .rating(ReviewEntity.getRating())
+                        .description(ReviewEntity.getDescription())
+                        .reviewdDate(ReviewEntity.getReviewedDate())
+                        .build())
+                .toList();
     }
 }
