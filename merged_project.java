@@ -8798,18 +8798,3 @@ public class QRCodeUtil {
         }
     }
 }
-// File: ./src/test/java/project/community/theatre/GreenwichCommunityTheatreTests.java
-
-package project.community.theatre;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class GreenwichCommunityTheatreTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
