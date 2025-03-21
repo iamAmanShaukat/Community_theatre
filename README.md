@@ -1,6 +1,4 @@
-Below is a well-structured and professional `README.md` file for your GitHub repository. It provides an overview of the project, its features, setup instructions, API documentation, and other relevant details.
 
----
 
 # **Greenwich Community Theatre (GCT) - Ticket Booking System**
 
