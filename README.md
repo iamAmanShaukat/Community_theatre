@@ -92,7 +92,7 @@ This project is ideal for small to medium-sized theatres or event organizers loo
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yourusername/gct-ticket-booking-system.git
+   git clone [https://github.com/yourusername/gct-ticket-booking-system.git](https://github.com/iamAmanShaukat/Community_theatre.git)
    cd gct-ticket-booking-system
    ```
 
