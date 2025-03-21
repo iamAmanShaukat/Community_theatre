@@ -73,7 +73,6 @@ This project is ideal for small to medium-sized theatres or event organizers loo
 - **PDF Generation**: iText
 - **QR Code Generation**: ZXing
 - **Logging**: SLF4J
-- **Testing**: JUnit, Mockito
 - **Build Tool**: Maven
 
 ---
