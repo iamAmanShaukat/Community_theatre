@@ -1,7 +1,5 @@
 package project.community.theatre.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,12 +11,10 @@ import project.community.theatre.model.BandEntity;
 import project.community.theatre.model.DiscountEntity;
 import project.community.theatre.repository.BandRepository;
 import project.community.theatre.repository.DiscountRepository;
-import project.community.theatre.service.BandService;
 import project.community.theatre.service.DiscountService;
+import project.community.theatre.service.DiscountStrategy;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,16 +24,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DiscountServiceImpl implements DiscountService {
 
-    @Autowired
-    private BandService bandService;
-    @Autowired
-    private DiscountRepository discountRepository;
+    private final BandRepository bandRepository;
+    private final DiscountRepository discountRepository;
 
     @Override
     public DiscountResponse calculateDiscount(DiscountRequest request) {
         log.info("Calculating discount for request: {}", request);
+
         DiscountResponse response = new DiscountResponse();
-        List<BandEntity> bands = bandService.getAllBands();
+        List<BandEntity> bands = bandRepository.findAll();
         List<DiscountEntity> discounts = getAllDiscounts();
 
         Map<String, Double> discountMap = createDiscountMap(discounts);
@@ -56,7 +51,7 @@ public class DiscountServiceImpl implements DiscountService {
             return response;
         }
 
-        calculateRegularDiscounts(request, prices, discountMap, response);
+        applyRegularDiscounts(request, prices, discountMap, response);
 
         double totalReduction = response.getChild() + response.getPensioner() +
                 response.getLastHour() + response.getWeekday();
@@ -67,7 +62,44 @@ public class DiscountServiceImpl implements DiscountService {
         return response;
     }
 
-    // Rest of the code remains unchanged
+    private void applyRegularDiscounts(DiscountRequest request, PriceBreakdown prices,
+                                       Map<String, Double> discountMap, DiscountResponse response) {
+        // Apply Child Discount
+        DiscountStrategy childStrategy = DiscountFactory.getDiscountStrategy("CHILDREN",
+                discountMap.getOrDefault("CHILDREN", 0.0));
+        response.setChild(childStrategy.calculateDiscount(prices.totalChildPrice, 1));
+
+        // Apply Pensioner Discount
+        DiscountStrategy pensionerStrategy = DiscountFactory.getDiscountStrategy("PENSIONERS",
+                discountMap.getOrDefault("PENSIONERS", 0.0));
+        response.setPensioner(pensionerStrategy.calculateDiscount(prices.totalPensionerPrice, 1));
+
+        // Apply Last Hour Discount
+        if (isLastHour(request.getShowTime())) {
+            DiscountStrategy lastHourStrategy = DiscountFactory.getDiscountStrategy("LAST_HOUR",
+                    discountMap.getOrDefault("LAST_HOUR", 0.0));
+            response.setLastHour(lastHourStrategy.calculateDiscount(prices.totalFullPrice, 1));
+        }
+
+        // Apply Weekday Discount
+        if (isWeekday(request.getDay())) {
+            DiscountStrategy weekdayStrategy = DiscountFactory.getDiscountStrategy("WEEKDAY_SPECIAL",
+                    discountMap.getOrDefault("WEEKDAY_SPECIAL", 0.0));
+            response.setWeekday(weekdayStrategy.calculateDiscount(prices.totalFullPrice, 1));
+        }
+    }
+
+    private boolean isLastHour(LocalDateTime showTime) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        long hoursUntilShow = java.time.temporal.ChronoUnit.HOURS.between(currentTime, showTime);
+        return hoursUntilShow <= 1;
+    }
+
+    private boolean isWeekday(String day) {
+        List<String> weekdays = List.of("monday", "tuesday", "wednesday", "thursday");
+        return weekdays.contains(day.toLowerCase());
+    }
+
     private Map<String, Double> createDiscountMap(List<DiscountEntity> discounts) {
         return discounts.stream()
                 .collect(Collectors.toMap(
@@ -107,38 +139,6 @@ public class DiscountServiceImpl implements DiscountService {
         return totalFullPrice * ((baseDiscount + additionalDiscount) / 100);
     }
 
-    private void calculateRegularDiscounts(DiscountRequest request, PriceBreakdown prices,
-                                           Map<String, Double> discountMap, DiscountResponse response) {
-        // Child and Pensioner discounts
-        double childDiscountPercent = discountMap.getOrDefault("CHILDREN", 0.0);
-        double pensionerDiscountPercent = discountMap.getOrDefault("PENSIONERS", 0.0);
-        response.setChild(prices.totalChildPrice * (childDiscountPercent / 100));
-        response.setPensioner(prices.totalPensionerPrice * (pensionerDiscountPercent / 100));
-
-        // Last Hour discount
-        if (isLastHour(request.getShowTime())) {
-            double lastHourPercent = discountMap.getOrDefault("LAST_HOUR", 0.0);
-            response.setLastHour(prices.totalFullPrice * (lastHourPercent / 100));
-        }
-
-        // Weekday discount
-        if (isWeekday(request.getDay())) {
-            double weekdayPercent = discountMap.getOrDefault("WEEKDAY_SPECIAL", 0.0);
-            response.setWeekday(prices.totalFullPrice * (weekdayPercent / 100));
-        }
-    }
-
-    private boolean isLastHour(LocalDateTime showTime) {
-        LocalDateTime currentTime = LocalDateTime.now();
-        long hoursUntilShow = ChronoUnit.HOURS.between(currentTime, showTime);
-        return hoursUntilShow <= 1;
-    }
-
-    private boolean isWeekday(String day) {
-        List<String> weekdays = Arrays.asList("monday", "tuesday", "wednesday", "thursday");
-        return weekdays.contains(day.toLowerCase());
-    }
-
     private static class PriceBreakdown {
         double totalChildPrice;
         double totalPensionerPrice;
@@ -163,6 +163,7 @@ public class DiscountServiceImpl implements DiscountService {
         return discountRepository.findByDiscountType(discountType)
                 .orElseThrow(() -> new DiscountNotFoundException("Discount not found for type: " + discountType));
     }
+
     @Override
     public DiscountEntity createOrUpdateDiscount(DiscountEntity discount) {
         log.info("Creating or updating discount: {}", discount);
@@ -170,7 +171,6 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    @Transactional
     public void deleteDiscount(String id) {
         if (!discountRepository.existsById(id)) {
             throw new DiscountNotFoundException("Discount not found for ID: " + id);
