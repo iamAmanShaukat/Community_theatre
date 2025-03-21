@@ -10,6 +10,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+/**
+ * Represents a discount entity in the community theatre system.
+ * This entity is used to store information about different types of discounts available.
+ *
+ */
+
 @Entity
 @Data
 @Builder

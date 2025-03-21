@@ -4,17 +4,29 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import project.community.theatre.dto.requestDto.PaymentRequest;
 import project.community.theatre.model.TicketEntity;
 import project.community.theatre.repository.EventRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ * Utility class for creating PDF tickets for community theatre events.
+ *
+ */
 @Slf4j
 @UtilityClass
 public class PDFUtil {
     private EventRepository eventRepository;
+
+    /**
+     * Creates a PDF ticket for the given ticket entity and QR code bytes.
+     *
+     * @param qrCodeBytes The byte array representing the QR code image.
+     * @param ticket      The ticket entity containing the ticket details.
+     * @return A byte array representing the generated PDF ticket.
+     * @throws RuntimeException If an error occurs while creating the PDF document or handling I/O operations.
+     */
     public static byte[] createPDF(byte[] qrCodeBytes, TicketEntity ticket) {
         log.info("Creating PDF for ticket: {}", ticket.getTicketNumber());
         try {

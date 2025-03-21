@@ -11,13 +11,29 @@ import project.community.theatre.util.EmailService;
 import project.community.theatre.util.PDFUtil;
 import project.community.theatre.util.QRCodeUtil;
 
+/**
+ * This service class is responsible for asynchronously processing ticket delivery.
+ * It creates a new thread to handle the ticket delivery process for a given ticket.
+ * The process includes generating a QR code, creating a PDF, sending an email with the PDF,
+ * and handling any exceptions that may occur during the process.
+ */
 @Service
 @Slf4j
 public class ProcessTicketAsync {
 
+    /**
+     * The email service used to send emails with PDF attachments.
+     */
     @Autowired
     EmailService emailService;
 
+    /**
+     * Asynchronously processes the ticket delivery for the given ticket and provided email.
+     *
+     * @param ticket The ticket entity for which the delivery needs to be processed.
+     * @param providedEmail The email address provided by the user. If null or empty,
+     *                      the email address associated with the ticket's user will be used.
+     */
     public void processTicketDeliveryAsync(TicketEntity ticket, String providedEmail) {
         new Thread(() -> {
             int maxAttempts = 3;
@@ -43,7 +59,6 @@ public class ProcessTicketAsync {
 
                     if (attempt == maxAttempts) {
                         log.error("All attempts failed for ticketId: {}", ticketId);
-                        // Here you could add fallback logic like notifying an admin
                         break;
                     }
 

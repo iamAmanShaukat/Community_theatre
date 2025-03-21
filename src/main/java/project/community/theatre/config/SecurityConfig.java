@@ -16,16 +16,35 @@ import project.community.theatre.filter.JwtRequestFilter;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Configuration class for setting up security in the application.
+ * This class is responsible for configuring web security settings,
+ * including CORS, CSRF, and authentication rules.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    
     private final JwtRequestFilter jwtRequestFilter;
 
+    /**
+     * Constructs a new SecurityConfig with the specified JWT request filter.
+     *
+     * @param jwtRequestFilter The JWT request filter to be used for authentication.
+     */
     public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
+    /**
+     * Configures the security filter chain for the application.
+     * This method sets up CSRF protection, CORS, request authorization rules,
+     * session management, and adds the JWT request filter.
+     *
+     * @param http The HttpSecurity object to be configured.
+     * @return A SecurityFilterChain object representing the configured security filters.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -43,6 +62,13 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configures and provides a CORS configuration source.
+     * This method sets up CORS settings including allowed origins, methods, headers,
+     * credentials, and max age for preflight requests.
+     *
+     * @return A CorsConfigurationSource object with the configured CORS settings.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

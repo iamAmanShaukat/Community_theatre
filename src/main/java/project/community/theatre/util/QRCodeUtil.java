@@ -10,8 +10,21 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+/**
+ * Utility class for generating QR codes for community theatre tickets.
+ */
 @Slf4j
 public class QRCodeUtil {
+
+    /**
+     * Generates a QR code for a given ticket UUID and returns it as a byte array in PNG format.
+     *
+     * @param uuid    The unique identifier of the ticket.
+     * @param width   The width of the generated QR code image.
+     * @param height  The height of the generated QR code image.
+     * @return A byte array containing the QR code image in PNG format.
+     * @throws RuntimeException If an error occurs during QR code generation or writing to the output stream.
+     */
     public static byte[] generateTicketQRCode(String uuid, int width, int height) {
         log.info("Generating QR code for ticket: {}", uuid);
         try {

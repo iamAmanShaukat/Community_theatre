@@ -19,19 +19,25 @@ public class PaymentController {
     private final PaymentService paymentService;
     private final TicketService ticketService;
 
+    /**
+     * Processes a payment request and generates a ticket if the payment is successful.
+     *
+     * @param paymentRequest The request containing payment details.
+     * @return A ResponseEntity containing the generated ticket if the payment is successful, otherwise a bad request response with the payment response.
+     */
     @PostMapping("/process")
     public ResponseEntity<?> processPayment(@RequestBody PaymentRequest paymentRequest) {
         log.info("Received payment request: {}", paymentRequest);
         // Process the payment
         PaymentResponse paymentResponse = paymentService.processPayment(paymentRequest);
-
+    
         if (!paymentResponse.isSuccess()) {
             return ResponseEntity.badRequest().body(paymentResponse);
         }
-
+    
         // Generate and save the ticket
         TicketResponse ticketResponse = ticketService.generateAndSaveTicket(paymentRequest, paymentResponse.getTransactionId());
-
+    
         return ResponseEntity.ok(ticketResponse);
     }
 }
