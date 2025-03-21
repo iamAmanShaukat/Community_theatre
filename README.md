@@ -26,9 +26,8 @@ This project is ideal for small to medium-sized theatres or event organizers loo
 1. [Features](#features)
 2. [Technologies Used](#technologies-used)
 3. [Setup Instructions](#setup-instructions)
-4. [API Documentation](#api-documentation)
-5. [Project Structure](#project-structure)
-6. [License](#license)
+4. [Project Structure](#project-structure)
+5. [License](#license)
 
 ---
 
@@ -128,12 +127,6 @@ This project is ideal for small to medium-sized theatres or event organizers loo
 
 ---
 
-## **API Documentation**
-
-The project includes comprehensive API documentation using Swagger/OpenAPI. To access the API documentation:
-
-1. Start the application.
-2. Navigate to `http://localhost:8080/swagger-ui.html`.
 
 ### **Endpoints Overview**
 
