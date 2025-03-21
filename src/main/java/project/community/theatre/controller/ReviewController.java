@@ -21,6 +21,12 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    /**
+     * This method saves a new review for an event.
+     *
+     * @param request A ReviewRequestDto object containing the details of the review to be saved.
+     * @return A ResponseEntity containing the newly saved ReviewEntity object.
+     */
     @PostMapping("/save")
     public ResponseEntity<ReviewEntity> saveReview(@RequestBody ReviewRequestDto request) {
         log.info("Received request to save review for event ID: {}", request.getEventId());
@@ -36,6 +42,12 @@ public class ReviewController {
         return ResponseEntity.ok(savedReview);
     }
 
+    /**
+     * This method fetches all reviews for a specific event.
+     *
+     * @param eventId The unique identifier of the event to fetch reviews for.
+     * @return A ResponseEntity containing a list of ReviewEntity objects.
+     */
     @GetMapping("/all/{eventId}")
     public ResponseEntity<List<ReviewResponseDto>> getAllReviews(@PathVariable String eventId) {
         log.info("Received request to fetch all reviews for event ID: {}", eventId);

@@ -26,6 +26,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private UserService userService;
 
+    /**
+     * Validates the JWT token provided in the "Authorization" header of the request, and authenticates the user if the
+     * token is valid.
+     *
+     * @param request  the HTTP request
+     * @param response the HTTP response
+     * @param chain    the filter chain
+     * @throws ServletException if an error occurs during the filter chain
+     * @throws IOException       if an I/O error occurs
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain chain)
             throws ServletException, IOException {

@@ -7,6 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents a band entity in the community theatre system.
+ * This class is used to store and retrieve band-related information from the database.
+ *
+ */
 @Entity
 @Data
 @Builder

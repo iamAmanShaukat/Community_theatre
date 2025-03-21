@@ -16,6 +16,10 @@ import java.util.List;
 @Table(name = "events")
 public class EventEntity {
 
+    /**
+     * Unique identifier for the event.
+     * Cannot be null.
+     */
     @Id
     @NotNull(message = "ID cannot be null")
     private String eventId;
@@ -47,7 +51,12 @@ public class EventEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    // Relationship with ShowTimeEntity
+    /**
+     * List of show times associated with the event.
+     * This is a one-to-many relationship with ShowTimeEntity.
+     * The showTimes are mapped by the "event" field in ShowTimeEntity.
+     * Cascading all operations to showTimes and removing orphaned showTimes.
+     */
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShowTimeEntity> showTimes;
 

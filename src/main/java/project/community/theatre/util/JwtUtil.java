@@ -23,7 +23,13 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private Long expiration; // Token expiration time in milliseconds
 
-    // Generate a JWT token
+    /**
+     * Generate a JWT token.
+     *
+     * @param userId The unique identifier of the user.
+     * @param role The role of the user.
+     * @return A JWT token containing the user's ID and role.
+     */
     public String generateToken(String userId, String role) {
         log.info("Generating JWT token for user: {}", userId);
         Map<String, Object> claims = new HashMap<>();
@@ -41,22 +47,53 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+    /**
+     * Extract the user ID from the JWT token.
+     *
+     * @param token The JWT token.
+     * @return The user ID extracted from the token.
+     */
     public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    /**
+     * Extract the user role from the JWT token.
+     *
+     * @param token The JWT token.
+     * @return The user role extracted from the token.
+     */
     public String extractRole(String token) {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
 
+    /**
+     * Extract the expiration date from the JWT token.
+     *
+     * @param token The JWT token.
+     * @return The expiration date extracted from the token.
+     */
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    /**
+     * Check if the JWT token is expired.
+     *
+     * @param token The JWT token.
+     * @return True if the token is expired, false otherwise.
+     */
     public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
+    /**
+     * Validate the JWT token.
+     *
+     * @param token The JWT token.
+     * @param userId The expected user ID.
+     * @return True if the token is valid and not expired, false otherwise.
+     */
     public Boolean validateToken(String token, String userId) {
         final String extractedUserId = extractUserId(token);
         return (extractedUserId.equals(userId) && !isTokenExpired(token));

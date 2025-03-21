@@ -15,15 +15,30 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Base64;
 
+/**
+ * This service is responsible for sending emails with attachments using SendGrid.
+ */
 @Service
 @Slf4j
 public class EmailService {
     private final SendGrid sendGrid;
 
+    /**
+     * Constructor to initialize the SendGrid client with the provided API key.
+     *
+     * @param apiKey The API key for SendGrid.
+     */
     public EmailService(@Value("${sendgrid.api.key}") String apiKey) {
         this.sendGrid = new SendGrid(apiKey);
     }
 
+    /**
+     * Sends an email with a PDF attachment to the specified recipient.
+     *
+     * @param to The email address of the recipient.
+     * @param name The name of the recipient.
+     * @param pdfBytes The byte array representing the PDF content.
+     */
     public void sendEmailWithPDF(String to, String name, byte[] pdfBytes) {
         log.info("Sending email with PDF attachment to {}", to);
         try {

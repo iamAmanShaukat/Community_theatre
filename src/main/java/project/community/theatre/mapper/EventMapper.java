@@ -8,6 +8,13 @@ import java.time.LocalDate;
 
 public class EventMapper {
 
+    /**
+     * Maps an EventEntryDto object to an EventEntity object.
+     *
+     * @param eventEntryDto The DTO containing event data to be mapped.
+     * @return An EventEntity object populated with data from the provided DTO.
+     * @throws IllegalArgumentException if the eventEntryDto is null.
+     */
     public static EventEntity mapDtoToEntity(EventEntryDto eventEntryDto) {
         if (eventEntryDto == null) {
             throw new IllegalArgumentException("EventEntryDto cannot be null");
