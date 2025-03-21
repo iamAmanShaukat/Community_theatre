@@ -19,12 +19,5 @@ public interface ReviewService {
      * @return a ReviewEntity that has been saved to the database
      */
     public ReviewEntity saveReview(String userName, Integer rating, String description, String eventId);
-
-    /**
-     * This method fetches all reviews for a given event ID.
-     *
-     * @param eventId the id of the event for which to fetch reviews
-     * @return a list of ReviewEntity objects that have been saved for the given event
-     */
-    public List<ReviewEntity> getAllReviews(String eventId);
+    public List<ReviewResponseDto> getAllReviews(String eventId);
 }

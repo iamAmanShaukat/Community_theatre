@@ -12,6 +12,6 @@ public class ReviewResponseDto {
     private String userName;
     private Integer rating;
     private String description;
-    private LocalDate reviewdDate;
+    private LocalDate reviewDate;
 
 }

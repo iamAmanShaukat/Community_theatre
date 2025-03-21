@@ -65,7 +65,7 @@ public class ReviewServiceImpl implements ReviewService {
                         .userName(ReviewEntity.getUserName())
                         .rating(ReviewEntity.getRating())
                         .description(ReviewEntity.getDescription())
-                        .reviewdDate(ReviewEntity.getReviewedDate())
+                        .reviewDate(ReviewEntity.getReviewedDate())
                         .build())
                 .toList();
     }
