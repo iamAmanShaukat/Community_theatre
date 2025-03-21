@@ -83,7 +83,7 @@ This project is ideal for small to medium-sized theatres or event organizers loo
 
 1. **Java 17+**: Ensure you have Java installed on your machine.
 2. **Maven**: Install Maven to build and run the project.
-3. **PostgreSQL**: Set up a PostgreSQL database.
+3. **MySQL**: Set up a mySql database.
 4. **Redis**: Install Redis for seat locking.
 5. **Cloudinary**: Create a Cloudinary account for image uploads.
 6. **SendGrid**: Create a SendGrid account for email notifications.
@@ -97,18 +97,18 @@ This project is ideal for small to medium-sized theatres or event organizers loo
    ```
 
 2. **Set Up Environment Variables**:
-   Create a `.env` file in the root directory and add the following variables:
+   Create a `application.properties` file in the root directory and add the following variables:
    ```env
-   SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/gctdb
-   SPRING_DATASOURCE_USERNAME=your_db_username
-   SPRING_DATASOURCE_PASSWORD=your_db_password
-   JWT_SECRET=your_jwt_secret_key
-   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-   CLOUDINARY_API_KEY=your_cloudinary_api_key
-   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-   SENDGRID_API_KEY=your_sendgrid_api_key
-   REDIS_HOST=localhost
-   REDIS_PORT=6379
+   SPRING.DATASOURCE.URL=jdbc:mysql://localhost:3306/esed_project
+   SPRING.DATASOURCE.USERNAME=root
+   SPRING.DATASOURCE.PASSWORD=
+   JWT.SECRET=your_jwt_secret_key
+   CLOUDINARY.CLOUD.NAME=your_cloudinary_cloud_name
+   CLOUDINARY.API.KEY=your_cloudinary_api_key
+   CLOUDINARY.API.SECRET=your_cloudinary_api_secret
+   SENDGRID.API.KEY=your_sendgrid_api_key
+   REDIS.HOST=localhost
+   REDIS.PORT=6379
    ```
 
 3. **Build the Project**:
