@@ -159,21 +159,26 @@ The project follows a clean architecture with the following structure:
 
 ```
 src/
-├── main/
-│   ├── java/project/community/theatre/
-│   │   ├── controller/      # API controllers
-│   │   ├── dto/             # Data Transfer Objects (DTOs)
-│   │   ├── exception/       # Custom exceptions
-│   │   ├── model/           # Entity models
-│   │   ├── repository/      # Database repositories
-│   │   ├── service/         # Business logic services
-│   │   ├── util/            # Utility classes
-│   │   └── AppApplication.java # Main application class
-│   └── resources/
-│       ├── application.yml  # Configuration file
-│       └── static/          # Static assets
-└── test/
-    └── java/                # Unit and integration tests
+├── main
+│   ├── java
+│   │   └── project
+│   │       └── community
+│   │           └── theatre
+│   │               ├── GreenwichCommunityTheatre.java
+│   │               ├── config
+│   │               ├── constant
+│   │               ├── controller
+│   │               ├── dto
+│   │               ├── enums
+│   │               ├── exception
+│   │               ├── filter
+│   │               ├── mapper
+│   │               ├── model
+│   │               ├── repository
+│   │               ├── service
+│   │               └── util
+│   └── resources
+│       └── application.properties
 ```
 
 ---
