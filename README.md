@@ -28,9 +28,7 @@ This project is ideal for small to medium-sized theatres or event organizers loo
 3. [Setup Instructions](#setup-instructions)
 4. [API Documentation](#api-documentation)
 5. [Project Structure](#project-structure)
-6. [Contributing](#contributing)
-7. [License](#license)
-8. [Contact](#contact)
+6. [License](#license)
 
 ---
 
@@ -180,19 +178,6 @@ src/
 │   └── resources
 │       └── application.properties
 ```
-
----
-
-## **Contributing**
-
-We welcome contributions from the community! If you'd like to contribute, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch for your feature (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -m "Add feature"`) and push to your branch (`git push origin feature-name`).
-4. Open a pull request with a detailed description of your changes.
-
-Please ensure your code adheres to the project's coding standards and includes appropriate tests.
 
 ---
 
