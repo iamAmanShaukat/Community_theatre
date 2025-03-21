@@ -1,5 +1,6 @@
 package project.community.theatre.service;
 
+import project.community.theatre.dto.responseDto.ReviewResponseDto;
 import project.community.theatre.model.ReviewEntity;
 
 import java.util.List;
